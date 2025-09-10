@@ -1,8 +1,8 @@
-#CarLS Jr Data Reduction Pipeline
-##By Malena Bloom
+# CarLS Jr Data Reduction Pipeline
+## By Malena Bloom
 This repository hosts the data reduction code used for the Carnegie Lab Spectrograph (CarLS Jr), developed during the CASSI 2025 program in support of the Via Project. 
 
-###Necessary Packages
+### Necessary Packages
 - numpy
 - pandas
 - scipy
@@ -10,10 +10,10 @@ This repository hosts the data reduction code used for the Carnegie Lab Spectrog
 - matplotlib
 - specreduce
 - skimage
-####Reccomended Packages
+#### Reccomended Packages
 - Aquarel
   
-###Function Descriptions
+### Function Descriptions
 All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
 - make1D
   - Converts spectral image (as outputted by CarLS Jr) to 1D spectrum
@@ -96,7 +96,7 @@ All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
     - automatically plots both the spectrum with centroids and peaks marked and a resilduals plot
 
     
-###Typical Data Reduction Process
+### Typical Data Reduction Process
 1. 
 
-###Credits
+### Credits
