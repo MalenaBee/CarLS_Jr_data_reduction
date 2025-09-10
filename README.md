@@ -11,7 +11,7 @@ This repository hosts the data reduction code used for the Carnegie Lab Spectrog
 - specreduce
 - skimage
 #### Reccomended Packages
-- Aquarel
+- aquarel
   
 ### Function Descriptions
 All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
@@ -109,7 +109,9 @@ All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
 7. plot the UNe spectrum (with centroids) and overlay peaks from NIST line list (__LINK REDUCED LIST__)
 8. find offset between UNe data and line list]
 9. rough wavelength solution using a cubic regression for offset pixels vs. wavelengths 
-10. identify triplet of interest in ThAr spectrum (__DEFINE/ADD LIST__)
-11. 
+10. identify triplet of interest in ThAr spectrum (__DEFINE/ADD LIST__) and plot against rough wavelength solution
+11. find offset between the plotted points of interest and the triplet's wavelength in NIST databases (__ADD LIST__)
+12. offset the wavelength solution and plot against spectrum for final spectrum!
 
 ### Credits
+Made under the guidance of Dr. Jack Piotrowski at Carnegie Science Observatories
