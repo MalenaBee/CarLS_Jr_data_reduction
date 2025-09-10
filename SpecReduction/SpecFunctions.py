@@ -14,7 +14,7 @@ from skimage.transform import rotate
 from astropy import units as u
 
 
-def make1D(image, area_norm = True):
+def make1D(img, area_norm = True):
     """
     Uses specreduce to convert spectral image to 1D spectrum
     area_norm: True (default) is normalized by area, False if normalized by max peak height
@@ -25,11 +25,11 @@ def make1D(image, area_norm = True):
         from specreduce.background import Background
         from specreduce.extract import BoxcarExtract
         
-    image: FITS file image data
+    img: FITS file image data
     """
-    height = image.shape[0]
+    height = img.shape[0]
     spec_center = height/2 #Creates a cross-section approximately midway through the spectrum
-    spec_trace = FlatTrace(image, spec_center)
+    spec_trace = FlatTrace(img, spec_center)
     #Creates background cross-section
     if height > 1000:
         bkg_width = 20
@@ -38,9 +38,9 @@ def make1D(image, area_norm = True):
     else:
         bkg_width = 5
     bkg_sep = int((spec_center - bkg_width)/2)
-    spec_bkg = Background.two_sided(image, spec_trace, separation = bkg_sep, width = bkg_width)
+    spec_bkg = Background.two_sided(img, spec_trace, separation = bkg_sep, width = bkg_width)
     #subtract!
-    sub_spec = image - spec_bkg
+    sub_spec = img - spec_bkg
     #extract 1D spectrum
     spec_width = bkg_width
     extraction = BoxcarExtract(sub_spec, spec_trace, width = spec_width)
@@ -96,17 +96,17 @@ def medianImg(img_num, path, rows, columns):
     stack_avg = np.median(stack, axis = 0)
     return stack_avg
 
-def findLine(image, peak_loc, threshold=2):
+def findLine(img, peak_loc, threshold=2):
     """
     finds the start of the spectral image (row index)
-    image: FITS image data
+    img: FITS image data
     peak_loc: column index of peak, found using find_peaks
-    threshold: how much brighter the next pixel must be than the previous to be recognized as light (default: 2)
+    threshold: 2 (Default), how much brighter the next pixel must be than the previous to be recognized as a signal 
     """
     start = np.nan
-    for row in range(image.shape[0] - 1):
-        pixel = image[row, peak_loc]
-        pixel_below = image[row+1, peak_loc]
+    for row in range(img.shape[0] - 1):
+        pixel = img[row, peak_loc]
+        pixel_below = img[row+1, peak_loc]
         if pixel >=50:
             if pixel_below >= threshold*pixel:
                 start = row
@@ -134,15 +134,15 @@ def find2Largest (peaks, locations):
             second_loc = locations[x]
     return largest, largest_loc, second, second_loc
 
-def straightSpec (spec_img, threshold = 2):
+def straightSpec (img, threshold = 2):
     """
     Identifies the top of the brightest lines in a spectrum (image) and connects them in a line. Tilts image until the slope between the top of the lines is 0.
-    If result is better, but not all the way fixed, run a second time with first correcteed image as input
-    spec_img: FITS image data for spectrum
+    If result is not accurate, run a second time with first corrected image as input
+    img: FITS image data for spectrum 
     threshold: Identifies the contrast needed between the background and the light for a line to be identified (default = 2)
     """
     #find peaks in spectrum
-    spec = make1D(spec_img, False)
+    spec = make1D(img, False)
     loc, props = scipy.signal.find_peaks(spec, height = 0.2)
     peak_val = np.array([])
     for p in range(loc.size):
@@ -152,18 +152,18 @@ def straightSpec (spec_img, threshold = 2):
     peak_large, large_loc, peak_second, second_loc = find_2_largest(peak_val, loc)
     print(find_2_largest(peak_val, loc))
 
-    large_row = find_line(spec_img, large_loc)
+    large_row = find_line(img, large_loc)
 
-    second_row = find_line(spec_img, second_loc)
+    second_row = find_line(img, second_loc)
 
     #tilt spectrum
     angle = np.degrees(np.arctan((large_row - second_row)/(large_loc - second_loc)))
-    corrected_spec = rotate(spec_img, angle)
+    corrected_spec = rotate(img, angle)
     print(angle)
     
     # plot (for troubleshooting)
     plt.figure(figsize = (12,12))
-    plt.imshow(spec_img, norm = 'log', vmin = 1)
+    plt.imshow(img, norm = 'log', vmin = 1)
     plt.title('Original Image')
     plt.colorbar(shrink = 0.4, location = 'bottom', pad = 0.04)
     plt.axhline(y = 500)
@@ -188,7 +188,7 @@ def findPeaks(spec,threshold = 0.025):
     """
     Find peaks and key peak characteristics in a spectrum
     spec: 1D spectrum of interest
-    threshold: Height needed for a peak to be recognized (default: 0.025)
+    threshold: 0.25 (Default), height needed for a peak to be recognized
     returns: peak locations, peak intensities, full peak width, half peak width
     """
     peak_locs, peak_props = scipy.signal.find_peaks(spec, height = threshold)
@@ -252,7 +252,7 @@ def cleanPeaks(peak_props):
 
 def centroid(spec, pixels, peak_props):
     """
-    Uses the weighted mean to center pixels, then plots calculated alongside residuals plot (difference between identified peaks and centroid)
+    Uses the weighted mean to center peaks, then plots calculated alongside residuals plot (difference between identified peaks and centroid)
     spec: spectrum
     pixels: array of pixels (length of spectrum)
     peak_props : peak locations, peak intensities, full width, full width half max (eliminate double peaks)
