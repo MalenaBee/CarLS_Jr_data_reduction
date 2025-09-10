@@ -70,7 +70,7 @@ def cropSpec(img):
     image = cutout.data
     return image
 
-def median_img(img_num, path, rows, columns):
+def medianImg(img_num, path, rows, columns):
     """
     crops spectra, stacks images, and finds the median
     img_num: number of images in stack
@@ -96,7 +96,7 @@ def median_img(img_num, path, rows, columns):
     stack_avg = np.median(stack, axis = 0)
     return stack_avg
 
-def find_line(image, peak_loc, threshold=2):
+def findLine(image, peak_loc, threshold=2):
     """
     finds the start of the spectral image (row index)
     image: FITS image data
@@ -113,7 +113,7 @@ def find_line(image, peak_loc, threshold=2):
                 break
     return start
 
-def find_2_largest (peaks, locations):
+def find2Largest (peaks, locations):
     """
     finds the 2 largest peaks in a 1D spectrum
     peaks: list of peak values in spectrum
@@ -134,7 +134,7 @@ def find_2_largest (peaks, locations):
             second_loc = locations[x]
     return largest, largest_loc, second, second_loc
 
-def straight_spec (spec_img, threshold = 2):
+def straightSpec (spec_img, threshold = 2):
     """
     Identifies the top of the brightest lines in a spectrum (image) and connects them in a line. Tilts image until the slope between the top of the lines is 0.
     If result is better, but not all the way fixed, run a second time with first correcteed image as input
@@ -184,7 +184,7 @@ def straight_spec (spec_img, threshold = 2):
     
     return corrected_spec
 
-def find_peaks(spec,threshold = 0.025):
+def findPeaks(spec,threshold = 0.025):
     """
     Find peaks and key peak characteristics in a spectrum
     spec: 1D spectrum of interest
@@ -198,7 +198,7 @@ def find_peaks(spec,threshold = 0.025):
 
     return peak_locs, peak_vals, fw, fwhm
 
-def clean_peaks(peak_props):
+def cleanPeaks(peak_props):
     """
     Eliminates double peaks from peaks list (and related lists of peak properties)
     peak_props: peak locations, peak intensities, full width, full width half max
