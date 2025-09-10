@@ -32,7 +32,7 @@ All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
   - Crops all spectra in a data set, stacks the images, then finds the median
   - Inputs:
     - img_num -> number of images in data set
-    - path -> path to FITS files (in form /path/to/image), note: drop all numbers and _.FITS_ from file name
+    - path -> path to FITS files (in form _/path/to/image_), note: drop all numbers and _.FITS_ from file name
     - rows -> pixel number in each row of the image (_FITS_IMAGE.data.shape[0]_)
     - columns -> pixel number in each column of the image (_FITS_IMAGE.data.shape[1]_)
   - Returns:
@@ -93,10 +93,23 @@ All custom functions are hosted in _SpecReduction_ -> _SpecFunctions.py_
     - list of centroid positions
     - list of residual values
   - __Notes:__
-    - automatically plots both the spectrum with centroids and peaks marked and a resilduals plot
+    - automatically plots both the spectrum with centroids and peaks marked and a residuals plot
 
     
 ### Typical Data Reduction Process
-1. 
+1. take median for stacks of bias frames, darks, and lights for both ThAr and reference UNe
+2. subtract background by subtracting
+   * darks - bias = _darks_
+   * lights - bias = _lights_
+   * _lights_ - _darks_ = cleaned_img
+3. flip image
+4. straighten image
+5. extract 1D spectrum
+6. idetify peaks, clean peak properties, and centroid spectra
+7. plot the UNe spectrum (with centroids) and overlay peaks from NIST line list (__LINK REDUCED LIST__)
+8. find offset between UNe data and line list]
+9. rough wavelength solution using a cubic regression for offset pixels vs. wavelengths 
+10. identify triplet of interest in ThAr spectrum (__DEFINE/ADD LIST__)
+11. 
 
 ### Credits
